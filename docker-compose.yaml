@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  schedule_ms:
+    image: schedule_ms_develop
+    build: .
+    network_mode: host
