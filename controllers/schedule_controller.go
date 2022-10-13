@@ -93,7 +93,7 @@ func EditASchedule() gin.HandlerFunc {
         }
 
         //use the validator library to validate required fields
-        if validationErr := validate.Struct(&schedule); validationErr != nil {
+        if validationErr := valid.Struct(&schedule); validationErr != nil {
             c.JSON(http.StatusBadRequest, responses.ScheduleResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": validationErr.Error()}})
             return
         }
