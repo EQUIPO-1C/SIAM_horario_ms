@@ -15,5 +15,5 @@ First build your image in the root directory of the project
 
 Then run your container with the next template
 
-    sudo docker run --network host -e DB_USER=<THE DATABASE USER> -e DB_PSWD=<THE DATABASE PASSWORD> --name schedule_ms schedule_ms_devimg
+    sudo docker run -it --network host -e DB_USER=<THE DATABASE USER> -e DB_PSWD=<THE DATABASE PASSWORD> --name schedule_ms schedule_ms_devimg
 
