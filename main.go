@@ -15,5 +15,5 @@ func main() {
     //routes
     routes.ScheduleRoute(router)
 
-    router.Run("localhost:4000")
+    router.Run("0.0.0.0:4000")
 }
