@@ -9,7 +9,6 @@ import (
     "time"
     "github.com/gin-gonic/gin"
     "github.com/go-playground/validator/v10"
-    "go.mongodb.org/mongo-driver/bson/primitive"
     "go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson" 
 )
@@ -65,10 +64,7 @@ func GetASchedule() gin.HandlerFunc {
         idEstudiante := c.Param("idEstudiante")
         var schedule models.Schedule
         defer cancel()
-
-        objId, _ := primitive.ObjectIDFromHex(idEstudiante)
-
-        err := scheduleCollection.FindOne(ctx, bson.M{"idestudiante": objId}).Decode(&schedule)
+        err := scheduleCollection.FindOne(ctx, bson.M{"idestudiante": idEstudiante}).Decode(&schedule)
         if err != nil {
             c.JSON(http.StatusInternalServerError, responses.ScheduleResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
             return
@@ -84,7 +80,6 @@ func EditASchedule() gin.HandlerFunc {
         idEstudiante := c.Param("idEstudiante")
         var schedule models.Schedule
         defer cancel()
-        objId, _ := primitive.ObjectIDFromHex(idEstudiante)
 
         //validate the request body
         if err := c.BindJSON(&schedule); err != nil {
@@ -108,10 +103,10 @@ func EditASchedule() gin.HandlerFunc {
             "viernes": schedule.Viernes, 
             "sabado": schedule.Sabado, 
             "domingo": schedule.Domingo,
-            "idestudiante": objId,
+            "idestudiante": idEstudiante,
         }
 
-        result, err := scheduleCollection.UpdateOne(ctx, bson.M{"idestudiante": objId}, bson.M{"$set": update})
+        result, err := scheduleCollection.UpdateOne(ctx, bson.M{"idestudiante": idEstudiante}, bson.M{"$set": update})
         if err != nil {
             c.JSON(http.StatusInternalServerError, responses.ScheduleResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
             return
@@ -120,7 +115,7 @@ func EditASchedule() gin.HandlerFunc {
         //get updated user details
         var updatedSchedule models.Schedule
         if result.MatchedCount == 1 {
-            err := scheduleCollection.FindOne(ctx, bson.M{"idestudiante": objId}).Decode(&updatedSchedule)
+            err := scheduleCollection.FindOne(ctx, bson.M{"idestudiante": idEstudiante}).Decode(&updatedSchedule)
             if err != nil {
                 c.JSON(http.StatusInternalServerError, responses.ScheduleResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
                 return
@@ -137,9 +132,7 @@ func DeleteASchedule() gin.HandlerFunc {
         idEstudiante := c.Param("idEstudiante")
         defer cancel()
 
-        objId, _ := primitive.ObjectIDFromHex(idEstudiante)
-
-        result, err := scheduleCollection.DeleteOne(ctx, bson.M{"idestudiante": objId})
+        result, err := scheduleCollection.DeleteOne(ctx, bson.M{"idestudiante": idEstudiante})
         if err != nil {
             c.JSON(http.StatusInternalServerError, responses.ScheduleResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
             return
@@ -179,7 +172,6 @@ func GetAllSchedules() gin.HandlerFunc {
             if err = results.Decode(&singleSchedule); err != nil {
                 c.JSON(http.StatusInternalServerError, responses.ScheduleResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
             }
-          
             schedules = append(schedules, singleSchedule)
         }
 

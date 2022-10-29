@@ -2,11 +2,8 @@
 package models
 
 import (
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	
 )
 type Schedule struct {
-    //Id       primitive.ObjectID `json:"id,omitempty"`
     Inicio   string   `json:"inicio" validate:"required"`
     Fin 	string        `json:"fin" validate:"required"`
     Lunes    []Subject           `json:"lunes" validate:"required"`
@@ -16,7 +13,7 @@ type Schedule struct {
 	Viernes    []Subject           `json:"viernes" validate:"required"`
 	Sabado   []Subject           `json:"sabado" validate:"required"`
 	Domingo    []Subject           `json:"domingo" validate:"required"`
-	IdEstudiante primitive.ObjectID    `json:"idestudiante" validate:"required"`
+	IdEstudiante string    `json:"idestudiante" validate:"required"`
 }
 
 type Subject struct {
