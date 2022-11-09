@@ -2,6 +2,7 @@
 package models
 
 import (
+	
 )
 type Schedule struct {
     Inicio   string   `json:"inicio" validate:"required"`
